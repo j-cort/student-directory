@@ -14,7 +14,6 @@ def input_students
     
     # get name
     while !name_ok do
-      puts name_ok
       puts "Enter student name"
       puts "To finish, just hit return twice"
       name = gets.chomp
@@ -56,19 +55,21 @@ def input_students
   students
 end
 
+
+
 def print_header
-  puts "The students of Villains Academy"
-  puts "----------"
+  puts "The students of Villains Academy".center(110)
+  puts "----------".center(110)
 end
 
 def print(students)
   students.each_with_index do |student, number|
-    puts "#{number + 1}. #{student[:name]}, #{student[:weapon]} (#{student[:cohort]} cohort)"
+    puts "#{number + 1}. #{student[:name]}, #{student[:weapon]} (#{student[:cohort]} cohort)".center(110)
   end
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  puts "Overall, we have #{names.count} great students".center(110)
 end
 
 students = input_students
