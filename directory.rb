@@ -89,11 +89,17 @@ def print_by_cohort(cohorts, students)
   end
 end
 
+def output_results
+  students = input_students
+  cohorts = get_cohorts(students)
+  if !students.empty?
+    print_header
+    print(students)
+    print_footer(students)
+    print_by_cohort(cohorts, students)
+  end
+end
 
-students = input_students
-cohorts = get_cohorts(students)
 
-print_header
-print(students)
-print_footer(students)
-print_by_cohort(cohorts, students)
+
+output_results
