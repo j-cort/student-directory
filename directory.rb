@@ -89,17 +89,49 @@ def print_by_cohort(cohorts, students)
   end
 end
 
-def output_results
-  students = input_students
-  cohorts = get_cohorts(students)
-  if !students.empty?
-    print_header
-    print(students)
-    print_footer(students)
-    print_by_cohort(cohorts, students)
+# def output_results
+#   students = input_students
+#   cohorts = get_cohorts(students)
+#   if !students.empty?
+#     print_header
+#     print(students)
+#     print_footer(students)
+#     print_by_cohort(cohorts, students)
+#   else
+#     puts "There are no students in our academy."
+#   end
+# end
+
+def interactive_menu
+  students = []
+  cohorts = []
+  loop do 
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    # get user input
+    selection = gets.chomp
+    # do what the user has asked
+    case selection
+      when "1"
+        students = input_students
+        cohorts = get_cohorts(students)
+      when "2"
+        if !students.empty?
+          print_header
+          print(students)
+          print_footer(students)
+          print_by_cohort(cohorts, students)
+        else
+          puts "There are no students in our academy."
+        end
+      when "9"
+        exit
+      else
+        puts "I don't know what you meant, try again"
+    end
   end
 end
 
+interactive_menu
 
-
-output_results
