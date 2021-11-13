@@ -1,3 +1,6 @@
+@students = []
+@cohorts = []
+
 def input_students
   # create an empty array
   students = []
@@ -51,8 +54,8 @@ def input_students
       students << {name: name, cohort: cohort, weapon: weapon}
     end
   end
-  # return the array of students
-  students
+  # assign array to @students instance variable
+  @students = students
 end
 
 def print_header
@@ -60,27 +63,27 @@ def print_header
   puts "----------".center(100)
 end
 
-def print(students)
+def print_students_list
   number = 0
-  while number < students.length
-    puts "#{number + 1}. #{students[number][:name]}, #{students[number][:weapon]} user (#{students[number][:cohort]} cohort)".center(100)
+  while number < @students.length
+    puts "#{number + 1}. #{@students[number][:name]}, #{@students[number][:weapon]} user (#{@students[number][:cohort]} cohort)".center(100)
     number += 1
   end
 end
 
-def print_footer(names)
-  names.count != 1 ? (puts "Overall, we have #{names.count} great students".center(100)) : 
-    (puts "Overall, we have #{names.count} great student".center(100))
+def print_footer
+  @students.count != 1 ? (puts "Overall, we have #{@students.count} great students".center(100)) : 
+    (puts "Overall, we have #{@students.count} great student".center(100))
 end
 
-def get_cohorts(students)
-  students.map { |student| student[:cohort]}.uniq
+def get_cohorts
+  @students.map { |student| student[:cohort]}.uniq
 end
 
-def print_by_cohort(cohorts, students)
-  cohorts.each do |cohort|
+def print_by_cohort
+  @cohorts.each do |cohort|
     puts "#{cohort.to_s.upcase} COHORT"
-    students.each_with_index do |student, index|
+    @students.each_with_index do |student, index|
       if student[:cohort] == cohort
         puts "#{student[:name]}, #{student[:weapon]} user"
       end
@@ -89,47 +92,41 @@ def print_by_cohort(cohorts, students)
   end
 end
 
-# def output_results
-#   students = input_students
-#   cohorts = get_cohorts(students)
-#   if !students.empty?
-#     print_header
-#     print(students)
-#     print_footer(students)
-#     print_by_cohort(cohorts, students)
-#   else
-#     puts "There are no students in our academy."
-#   end
-# end
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def show_students
+  if !@students.empty?
+    print_header
+    print_students_list
+    print_footer
+    print_by_cohort
+  else
+    puts "There are no students in our academy."
+  end
+end
+
+def process(selection)
+  case selection
+    when "1"
+      @students = input_students
+      @cohorts = get_cohorts
+    when "2"
+      show_students
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+  end
+end
 
 def interactive_menu
-  students = []
-  cohorts = []
   loop do 
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit"
-    # get user input
-    selection = gets.chomp
-    # do what the user has asked
-    case selection
-      when "1"
-        students = input_students
-        cohorts = get_cohorts(students)
-      when "2"
-        if !students.empty?
-          print_header
-          print(students)
-          print_footer(students)
-          print_by_cohort(cohorts, students)
-        else
-          puts "There are no students in our academy."
-        end
-      when "9"
-        exit
-      else
-        puts "I don't know what you meant, try again"
-    end
+    print_menu
+    process(gets.chomp)
   end
 end
 
