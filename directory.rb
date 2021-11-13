@@ -57,7 +57,7 @@ end
 
 def print_header
   puts "The students of Villains Academy".center(100)
-  puts "----------".center(110)
+  puts "----------".center(100)
 end
 
 def print(students)
@@ -69,7 +69,8 @@ def print(students)
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students".center(100)
+  names.count > 1 ? (puts "Overall, we have #{names.count} great students".center(100)) : 
+    (puts "Overall, we have #{names.count} great student".center(100))
 end
 
 def get_cohorts(students)
