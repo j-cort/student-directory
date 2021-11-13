@@ -46,7 +46,7 @@ def input_students
       acceptable_month.include?(cohort) ? cohort = cohort.downcase.to_sym : cohort = :unknown
       
       # get weapon
-      puts "Enter weapoon"
+      puts "Enter weapon"
       weapon = gets.chomp
       weapon.empty? ? weapon = :unknown : weapon = weapon.downcase.to_sym 
       
@@ -95,6 +95,7 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit"
 end
 
@@ -109,6 +110,18 @@ def show_students
   end
 end
 
+def save_students
+  # open the file for writing
+  file = File.open("students.csv", "w")
+  # iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
+end
+
 def process(selection)
   case selection
     when "1"
@@ -116,6 +129,8 @@ def process(selection)
       @cohorts = get_cohorts
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit
     else
