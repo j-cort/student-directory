@@ -100,10 +100,10 @@ def print_by_cohort
 end
 
 def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from file"
+  puts "1. Input students"
+  puts "2. Show students"
+  puts "3. Save student list to file"
+  puts "4. Load student list from file"
   puts "9. Exit"
 end
 
@@ -119,8 +119,11 @@ def show_students
 end
 
 def save_students
+  # get filename
+  puts "Enter filename e.g. 'psychos.csv'"
+  filename = STDIN.gets.chomp
   # open the file for writing
-  file = File.open("students.csv", "w")
+  file = File.open(filename, "w")
   # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:weapon]]
@@ -128,20 +131,48 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Saved #{@students.count} to #{filename}"
 end
 
 def try_load_students
-  filename = ARGV.first
-  if filename.nil?
-    load_students
-  elsif File.exists?(filename)
-    load_students(filename)
+  puts "1. Load preloaded file"
+  puts "2. Load new file"
+  puts "3. Back to main menu"
+  
+  selection = STDIN.gets.chomp
+  
+  if selection == "3"
+    puts "**Back To Main Menu Selected...**"
+    return
+  elsif selection == "1"
+    puts "**Load Preloaded File Selected...**"
+    filename = ARGV.first
+    if filename.nil?
+      load_students
+      puts "loaded #{@students.count} from students.csv"
+    elsif File.exists?(filename)
+      load_students(filename)
       puts "loaded #{@students.count} from #{filename}"
-  else
-    puts "Sorry, #{filename} doesn't exist"
-    puts "loading 'students.csv' instead"
-    load_students
-  end
+    else
+      puts "Sorry, #{filename} doesn't exist"
+      puts "loaded #{@students.count} from students.csv instead"
+      load_students
+    end
+  elsif selection == "2"
+    puts "**Load New File Selected...**"
+    filename = selection
+    if filename.nil?
+      load_students
+      puts "loaded #{@students.count} from students.csv"
+    elsif File.exists?(filename)
+      load_students(filename)
+      puts "loaded #{@students.count} from #{filename}"
+    else
+      puts "Sorry, #{filename} doesn't exist"
+      load_students
+      puts "loaded #{@students.count} from students.csv instead"
+    end
+  end  
 end
 
 def load_students(filename = "students.csv")
@@ -157,20 +188,20 @@ end
 def process(selection)
   case selection
     when "1"
-      puts "Input Students Selected..."
+      puts "**Input Students Selected...**"
       @students = input_students
       @cohorts = get_cohorts
     when "2"
-      puts "Show Students Selected..."
+      puts "**Show Students Selected...**"
       show_students
     when "3"
-      puts "Save Students Selected..."
+      puts "**Save Students Selected...**"
       save_students
     when "4"
-      puts "Load Students Selected..."
+      puts "**Load Students Selected...**"
       try_load_students
     when "9"
-      puts "Exit Program Selected..."
+      puts "**Exit Program Selected...**"
       exit
     else
       puts "I don't know what you meant, try again"
@@ -178,7 +209,6 @@ def process(selection)
 end
 
 def interactive_menu
-    try_load_students
   loop do 
     print_menu
     process(STDIN.gets.chomp)
