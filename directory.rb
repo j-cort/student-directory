@@ -55,8 +55,6 @@ def input_students
   students
 end
 
-
-
 def print_header
   puts "The students of Villains Academy".center(100)
   puts "----------".center(110)
@@ -65,7 +63,7 @@ end
 def print(students)
   number = 0
   while number < students.length
-    puts "#{number + 1}. #{students[number][:name]}, #{students[number][:weapon]} (#{students[number][:cohort]} cohort)".center(100)
+    puts "#{number + 1}. #{students[number][:name]}, #{students[number][:weapon]} user (#{students[number][:cohort]} cohort)".center(100)
     number += 1
   end
 end
@@ -74,7 +72,26 @@ def print_footer(names)
   puts "Overall, we have #{names.count} great students".center(100)
 end
 
+def get_cohorts(students)
+  students.map { |student| student[:cohort]}.uniq
+end
+
+def print_by_cohort(cohorts, students)
+  cohorts.each do |cohort|
+    puts "#{cohort.to_s.upcase} COHORT"
+    students.each do |student|
+      if student[:cohort] == cohort
+        puts "#{student[:name]}, #{student[:weapon]} user"
+      end
+    end
+  end
+end
+
+
 students = input_students
+cohorts = get_cohorts(students)
+
 print_header
 print(students)
 print_footer(students)
+print_by_cohort(cohorts, students)
