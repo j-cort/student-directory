@@ -79,11 +79,12 @@ end
 def print_by_cohort(cohorts, students)
   cohorts.each do |cohort|
     puts "#{cohort.to_s.upcase} COHORT"
-    students.each do |student|
+    students.each_with_index do |student, index|
       if student[:cohort] == cohort
         puts "#{student[:name]}, #{student[:weapon]} user"
       end
     end
+    puts "\n"
   end
 end
 
