@@ -16,7 +16,7 @@ def input_students
     while !name_ok do
       puts "Enter student name"
       puts "To finish, just hit return twice"
-      name = gets.chomp
+      name = gets.chop
       
       # validate name
       if !name.empty? && !acceptable_first_letters.include?(name[0]) && name.length > 11
