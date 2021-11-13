@@ -157,15 +157,20 @@ end
 def process(selection)
   case selection
     when "1"
+      puts "Input Students Selected..."
       @students = input_students
       @cohorts = get_cohorts
     when "2"
+      puts "Show Students Selected..."
       show_students
     when "3"
+      puts "Save Students Selected..."
       save_students
     when "4"
+      puts "Load Students Selected..."
       try_load_students
     when "9"
+      puts "Exit Program Selected..."
       exit
     else
       puts "I don't know what you meant, try again"
