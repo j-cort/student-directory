@@ -19,7 +19,7 @@ def input_students
     while !name_ok do
       puts "Enter student name"
       puts "To finish, just hit return twice"
-      name = gets.chop
+      name = STDIN.gets.chop
       
       # validate name
       if !name.empty? && !acceptable_first_letters.include?(name[0]) && name.length > 11
@@ -42,12 +42,12 @@ def input_students
       
       # get cohort  
       puts "Enter cohort"
-      cohort = gets.chomp.downcase
+      cohort = STDIN.gets.chomp.downcase
       acceptable_month.include?(cohort) ? cohort = cohort.downcase.to_sym : cohort = :unknown
       
       # get weapon
       puts "Enter weapon"
-      weapon = gets.chomp
+      weapon = STDIN.gets.chomp
       weapon.empty? ? weapon = :unknown : weapon = weapon.downcase.to_sym 
       
       # add the villain hash to array
@@ -96,7 +96,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "4. Load the list from file"
   puts "9. Exit"
 end
 
@@ -123,8 +123,22 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def try_load_students
+  filename = ARGV.first
+  if filename.nil?
+    load_students
+  elsif File.exists?(filename)
+    load_students(filename)
+      puts "loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    puts "loading 'students.csv' instead"
+    load_students
+  end
+end
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym}
@@ -142,7 +156,7 @@ def process(selection)
     when "3"
       save_students
     when "4"
-      load_students
+      try_load_students
     when "9"
       exit
     else
@@ -153,7 +167,7 @@ end
 def interactive_menu
   loop do 
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
