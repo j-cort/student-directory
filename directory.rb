@@ -69,7 +69,7 @@ def print(students)
 end
 
 def print_footer(names)
-  names.count > 1 ? (puts "Overall, we have #{names.count} great students".center(100)) : 
+  names.count != 1 ? (puts "Overall, we have #{names.count} great students".center(100)) : 
     (puts "Overall, we have #{names.count} great student".center(100))
 end
 
