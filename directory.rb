@@ -51,11 +51,18 @@ def input_students
       weapon.empty? ? weapon = :unknown : weapon = weapon.downcase.to_sym 
       
       # add the villain hash to array
-      students << {name: name, cohort: cohort, weapon: weapon}
+      # students << {name: name, cohort: cohort, weapon: weapon}
+      add_student(students, name, cohort, weapon)
     end
   end
   # assign array to @students instance variable
   @students = students
+end
+
+def add_student(destination, name, cohort, weapon)
+  cohort = cohort.to_sym
+  weapon = weapon.to_sym
+  destination << {name: name, cohort: cohort, weapon: weapon}
 end
 
 def print_header
@@ -116,7 +123,7 @@ def save_students
   file = File.open("students.csv", "w")
   # iterate over the array of students
   @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
+    student_data = [student[:name], student[:cohort], student[:weapon]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
@@ -140,8 +147,9 @@ end
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
-  name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
+  name, cohort, weapon = line.chomp.split(",")
+    # @students << {name: name, cohort: cohort.to_sym, weapon: weapon.to_sym}
+    add_student(@students, name, cohort, weapon)
   end
   file.close
 end
