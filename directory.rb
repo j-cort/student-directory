@@ -130,49 +130,60 @@ def save_students
     csv_line = student_data.join(",")
     file.puts csv_line
   end
+  # close file and report status
   file.close
   puts "Saved #{@students.count} to #{filename}"
 end
 
-def try_load_students
+def print_load_menu
   puts "1. Load preloaded file"
   puts "2. Load new file"
   puts "3. Back to main menu"
-  
-  selection = STDIN.gets.chomp
-  
-  if selection == "3"
-    puts "**Back To Main Menu Selected...**"
-    return
-  elsif selection == "1"
-    puts "**Load Preloaded File Selected...**"
-    filename = ARGV.first
-    if filename.nil?
-      load_students
-      puts "loaded #{@students.count} from students.csv"
-    elsif File.exists?(filename)
-      load_students(filename)
-      puts "loaded #{@students.count} from #{filename}"
+end
+
+def load_process(selection)
+  case selection
+    when "3"
+      puts "**Back To Main Menu Selected...**"
+      return
+    when "1"
+      puts "**Load Preloaded File Selected...**"
+      filename = ARGV.first
+      if filename.nil?
+        load_students
+        puts "loaded #{@students.count} from students.csv by default"
+      elsif File.exists?(filename)
+        load_students(filename)
+        puts "loaded #{@students.count} from #{filename}"
+      else
+        puts "Sorry, #{filename} doesn't exist"
+        load_students
+        puts "loaded #{@students.count} from students.csv by default"
+      end
+    when "2"
+      puts "**Load New File Selected...**"
+      puts "Enter filename e.g. 'psychos.csv'"
+      filename = STDIN.gets.chomp
+      if filename.empty?
+        puts "No filename entered"
+        load_students
+        puts "loaded #{@students.count} from students.csv by default"
+      elsif File.exists?(filename)
+        load_students(filename)
+        puts "loaded #{@students.count} from #{filename}"
+      else
+        puts "Sorry, #{filename} doesn't exist"
+        load_students
+        puts "loaded #{@students.count} from students.csv by default"
+      end
     else
-      puts "Sorry, #{filename} doesn't exist"
-      puts "loaded #{@students.count} from students.csv instead"
-      load_students
-    end
-  elsif selection == "2"
-    puts "**Load New File Selected...**"
-    filename = selection
-    if filename.nil?
-      load_students
-      puts "loaded #{@students.count} from students.csv"
-    elsif File.exists?(filename)
-      load_students(filename)
-      puts "loaded #{@students.count} from #{filename}"
-    else
-      puts "Sorry, #{filename} doesn't exist"
-      load_students
-      puts "loaded #{@students.count} from students.csv instead"
-    end
-  end  
+      puts "I don't know what you meant, try again"
+  end
+end
+
+def try_load_students
+  print_load_menu
+  load_process(STDIN.gets.chomp)
 end
 
 def load_students(filename = "students.csv")
