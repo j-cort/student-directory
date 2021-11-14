@@ -1,6 +1,7 @@
 @students = []
 @cohorts = []
 
+# **** COLLECT STUDENT INFO ****
 def input_students
   # create an empty array
   students = []
@@ -34,7 +35,6 @@ def input_students
       end
     end
     
-    
     # break loop if name input is empty
     if name.empty?
       break
@@ -64,6 +64,22 @@ def add_student(destination, name, cohort, weapon)
   destination << {name: name, cohort: cohort, weapon: weapon}
 end
 
+def get_cohorts
+  @students.map { |student| student[:cohort]}.uniq
+end
+
+# **** DISPLAY STUDENT INFO ****
+def show_students
+  if !@students.empty?
+    print_header
+    print_students_list
+    print_footer
+    print_by_cohort
+  else
+    puts "There are no students in our academy."
+  end
+end
+
 def print_header
   puts "The students of Villains Academy".center(100)
   puts "----------".center(100)
@@ -82,41 +98,19 @@ def print_footer
     (puts "Overall, we have #{@students.count} great student".center(100))
 end
 
-def get_cohorts
-  @students.map { |student| student[:cohort]}.uniq
-end
-
 def print_by_cohort
   @cohorts.each do |cohort|
-    puts "#{cohort.to_s.upcase} COHORT"
+    puts "#{cohort.to_s.upcase} COHORT".center(100)
     @students.each_with_index do |student, index|
       if student[:cohort] == cohort
-        puts "#{student[:name]}, #{student[:weapon]} user"
+        puts "#{student[:name]}, #{student[:weapon]} user".center(100)
       end
     end
     puts "\n"
   end
 end
 
-def print_menu
-  puts "1. Input students"
-  puts "2. Show students"
-  puts "3. Save student list to file"
-  puts "4. Load student list from file"
-  puts "9. Exit"
-end
-
-def show_students
-  if !@students.empty?
-    print_header
-    print_students_list
-    print_footer
-    print_by_cohort
-  else
-    puts "There are no students in our academy."
-  end
-end
-
+# **** SAVE STUDENT INFO ****
 def save_students
   # get filename
   puts "Enter filename e.g. 'psychos.csv'"
@@ -134,13 +128,40 @@ def save_students
   puts "Saved #{@students.count} to #{filename}"
 end
 
+# **** LOAD STUDENT INFO ****
+def load_menu
+    print_load_menu
+    load_options(STDIN.gets.chomp)
+end
+
 def print_load_menu
   puts "1. Load preloaded file"
   puts "2. Load new file"
   puts "3. Back to main menu"
 end
 
-def load_file(filename, no_file, message)
+def load_options(selection)
+  case selection
+    when "3"
+      puts "**Back To Main Menu Selected...**"
+      return
+    when "1"
+      puts "**Load Preloaded File Selected...**"
+      # load preloaded file if there is one, else load a default file
+      filename = ARGV.first
+      load_process(filename, nil, "No file was preloaded at launch")
+    when "2"
+      # load new file if valid filename is provided, else load a default file
+      puts "**Load New File Selected...**"
+      puts "Enter filename e.g. 'psychos.csv'"
+      filename = STDIN.gets.chomp
+      load_process(filename, "", "No filename entered")
+    else
+      puts "I don't know what you meant, back to main menu"
+  end
+end
+
+def load_process(filename, no_file, message)
   if filename == no_file
     puts message
     load_students
@@ -155,55 +176,6 @@ def load_file(filename, no_file, message)
   end
 end
 
-def load_process(selection)
-  case selection
-    when "3"
-      puts "**Back To Main Menu Selected...**"
-      return
-    when "1"
-      puts "**Load Preloaded File Selected...**"
-      filename = ARGV.first
-      load_file(filename, nil, "No file was preloaded at launch")
-      
-      # if filename == nil
-      #   load_students
-      #   puts "loaded #{@students.count} from students.csv by default"
-      # elsif File.exists?(filename)
-      #   load_students(filename)
-      #   puts "loaded #{@students.count} from #{filename}"
-      # else
-      #   puts "Sorry, #{filename} doesn't exist"
-      #   load_students
-      #   puts "loaded #{@students.count} from students.csv by default"
-      # end
-    when "2"
-      puts "**Load New File Selected...**"
-      puts "Enter filename e.g. 'psychos.csv'"
-      filename = STDIN.gets.chomp
-      load_file(filename, "", "No filename entered")
-      
-      # if filename == ""
-      #   puts "No filename entered"
-      #   load_students
-      #   puts "loaded #{@students.count} from students.csv by default"
-      # elsif File.exists?(filename)
-      #   load_students(filename)
-      #   puts "loaded #{@students.count} from #{filename}"
-      # else
-      #   puts "Sorry, #{filename} doesn't exist"
-      #   load_students
-      #   puts "loaded #{@students.count} from students.csv by default"
-      # end
-    else
-      puts "I don't know what you meant, try again"
-  end
-end
-
-def try_load_students
-    print_load_menu
-    load_process(STDIN.gets.chomp)
-end
-
 def load_students(filename = "students.csv")
   students = []
   file = File.open(filename, "r")
@@ -216,7 +188,23 @@ def load_students(filename = "students.csv")
   @cohorts = get_cohorts
 end
 
-def process(selection)
+# NAVIGATE PROGRAM
+def interactive_menu
+  loop do 
+    print_menu
+    menu_options(STDIN.gets.chomp)
+  end
+end
+
+def print_menu
+  puts "1. Input students"
+  puts "2. Show students"
+  puts "3. Save student list to file"
+  puts "4. Load student list from file"
+  puts "9. Exit"
+end
+
+def menu_options(selection)
   case selection
     when "1"
       puts "**Input Students Selected...**"
@@ -230,19 +218,12 @@ def process(selection)
       save_students
     when "4"
       puts "**Load Students Selected...**"
-      try_load_students
+      load_menu
     when "9"
       puts "**Exit Program Selected...**"
       exit
     else
       puts "I don't know what you meant, try again"
-  end
-end
-
-def interactive_menu
-  loop do 
-    print_menu
-    process(STDIN.gets.chomp)
   end
 end
 
