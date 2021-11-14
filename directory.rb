@@ -1,3 +1,5 @@
+require 'csv'
+
 @students = []
 @cohorts = []
 
@@ -115,15 +117,21 @@ def save_students
   # get filename
   puts "Enter filename e.g. 'psychos.csv'"
   filename = STDIN.gets.chomp
-  # open the file for writing
-  File.open(filename, "w") do |f|
-    # iterate over the array of students
+  
+  CSV.open("./#{filename}", "w") do |csv|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort], student[:weapon]]
-      csv_line = student_data.join(",")
-      f.puts csv_line
+      csv << [student[:name], student[:cohort], student[:weapon]]
     end
   end
+  # # open the file for writing
+  # File.open(filename, "w") do |f|
+  #   # iterate over the array of students
+  #   @students.each do |student|
+  #     student_data = [student[:name], student[:cohort], student[:weapon]]
+  #     csv_line = student_data.join(",")
+  #     f.puts csv_line
+  #   end
+  # end
   puts "Saved #{@students.count} to #{filename}"
 end
 
@@ -181,12 +189,17 @@ end
 
 def load_students(filename = "students.csv")
     students = []
-    File.open(filename, "r") do |f|
-      f.readlines.each do |line|
-        name, cohort, weapon = line.chomp.split(",")
+  
+    CSV.foreach('./students.csv') do |row|
+        name, cohort, weapon = row
         add_student(students, name, cohort, weapon)
-      end
     end
+    # File.open(filename, "r") do |f|
+    #   f.readlines.each do |line|
+    #     name, cohort, weapon = line.chomp.split(",")
+    #     add_student(students, name, cohort, weapon)
+    #   end
+    # end
     @students = students
     @cohorts = get_cohorts
 end
