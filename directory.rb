@@ -162,30 +162,34 @@ def load_options(selection)
 end
 
 def load_process(filename, no_file, message)
-  if filename == no_file
+  if filename == no_file 
     puts message
-    load_students
-    puts "loaded #{@students.count} from students.csv by default"
+    if File.exists?("students.csv")
+      load_students
+      puts "loaded #{@students.count} from students.csv by default"
+    end
   elsif File.exists?(filename)
     load_students(filename)
     puts "loaded #{@students.count} from #{filename}"
   else
     puts "Sorry, #{filename} doesn't exist"
-    load_students
-    puts "loaded #{@students.count} from students.csv by default"
+    if File.exists?("students.csv")
+      load_students
+      puts "loaded #{@students.count} from students.csv by default"
+    end
   end
 end
 
 def load_students(filename = "students.csv")
-  students = []
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, weapon = line.chomp.split(",")
-    add_student(students, name, cohort, weapon)
-  end
-  file.close
-  @students = students
-  @cohorts = get_cohorts
+    students = []
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+      name, cohort, weapon = line.chomp.split(",")
+      add_student(students, name, cohort, weapon)
+    end
+    file.close
+    @students = students
+    @cohorts = get_cohorts
 end
 
 # NAVIGATE PROGRAM
