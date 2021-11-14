@@ -194,6 +194,7 @@ def load_students(filename = "students.csv")
   end
   file.close
   @students = students
+  @cohorts = get_cohorts
 end
 
 def process(selection)
