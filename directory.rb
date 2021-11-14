@@ -116,15 +116,14 @@ def save_students
   puts "Enter filename e.g. 'psychos.csv'"
   filename = STDIN.gets.chomp
   # open the file for writing
-  file = File.open(filename, "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:weapon]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(filename, "w") do |f|
+    # iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:weapon]]
+      csv_line = student_data.join(",")
+      f.puts csv_line
+    end
   end
-  # close file and report status
-  file.close
   puts "Saved #{@students.count} to #{filename}"
 end
 
@@ -147,11 +146,11 @@ def load_options(selection)
       return
     when "1"
       puts "**Load Preloaded File Selected...**"
-      # load preloaded file if there is one, else load a default file
+      # initiate load process for preloaded file if there is one, else load a default file
       filename = ARGV.first
       load_process(filename, nil, "No file was preloaded at launch")
     when "2"
-      # load new file if valid filename is provided, else load a default file
+      # initiate load process for new file if valid filename is provided, else load a default file
       puts "**Load New File Selected...**"
       puts "Enter filename e.g. 'psychos.csv'"
       filename = STDIN.gets.chomp
@@ -182,12 +181,12 @@ end
 
 def load_students(filename = "students.csv")
     students = []
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
-      name, cohort, weapon = line.chomp.split(",")
-      add_student(students, name, cohort, weapon)
+    File.open(filename, "r") do |f|
+      f.readlines.each do |line|
+        name, cohort, weapon = line.chomp.split(",")
+        add_student(students, name, cohort, weapon)
+      end
     end
-    file.close
     @students = students
     @cohorts = get_cohorts
 end
